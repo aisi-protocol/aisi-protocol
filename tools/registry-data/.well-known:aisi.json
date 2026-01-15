@@ -1,0 +1,11 @@
+{
+  "aisi_version": "1.0",
+  "kind": "PlatformManifest",
+  "platform_id": "urn:aisi:platform:demo-local",
+  "name": "AISI Local Demo Platform",
+  "endpoint_base": "http://localhost:3000",
+  "supported_versions": ["1.0"],
+  "services": [
+    "urn:aisi:service:demo:weather"
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "aisi_version": "1.0",
+  "kind": "AtomicService",
+  "metadata": {
+    "id": "aisi://pizzahub/pepperoni-pizza",
+    "name": "Classic Pepperoni Pizza Delivery",
+    "service_type": "food_delivery",
+    "provider": {
+      "name": "PizzaHub Downtown",
+      "id": "pizzahub"
+    },
+    "tags": ["pizza", "italian", "delivery", "quick-meal"],
+    "base_endpoint": "https://api.pizzahub.com/aisi/v1"
+  },
+  "extensions": {
+    "food_delivery": {
+      "dish": {
+        "name": "Classic Pepperoni Pizza",
+        "description": "Freshly baked pizza with pepperoni and melted cheese.",
+        "unit_price": 15.99,
+        "currency": "USD"
+      },
+      "order_constraints": {
+        "min_order_quantity": 1,
+        "max_order_quantity": 10,
+        "delivery_fee": 2.99,
+        "estimated_prep_time": 20
+      },
+      "service_area": {
+        "supported_regions": ["Downtown", "Midtown"]
+      }
+    }
+  },
+  "api": [
+    {
+      "name": "placeOrder",
+      "path": "/orders",
+      "method": "POST",
+      "description": "Place an order for a pepperoni pizza.",
+      "request_schema_ref": "#/extensions/food_delivery/order_schema"
+    }
+  ]
+}

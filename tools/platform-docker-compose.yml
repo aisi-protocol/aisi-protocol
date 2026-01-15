@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  # 服务注册中心：存储和发现AISI服务定义
+  service-registry:
+    image: nginx:alpine
+    container_name: aisi-registry
+    ports:
+      - "8080:80"
+    volumes:
+      # 挂载一个包含示例服务定义和平台清单的静态文件目录
+      - ./registry-data:/usr/share/nginx/html
+      # 自定义配置，提供.well-known端点
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - aisi-net
+
+  # 模拟API网关：路由请求到后端服务（此处为模拟响应）
+  api-gateway:
+    image: node:18-alpine
+    container_name: aisi-gateway
+    working_dir: /app
+    volumes:
+      # 挂载一个简单的Node.js网关模拟应用
+      - ./gateway-app:/app
+    ports:
+      - "3000:3000"
+    command: "node gateway.js"
+    environment:
+      - REGISTRY_URL=http://service-registry
+    networks:
+      - aisi-net
+    depends_on:
+      - service-registry
+
+  # 示例后端服务（可选）：一个真实的模拟天气服务
+  example-weather-service:
+    image: node:18-alpine
+    container_name: aisi-example-weather
+    working_dir: /app
+    volumes:
+      - ./example-service:/app
+    ports:
+      - "3001:3001"
+    command: "node weather-service.js"
+    networks:
+      - aisi-net
+
+networks:
+  aisi-net:
+    driver: bridge
+
+volumes:
+  registry-data:

@@ -1,0 +1,29 @@
+events {
+    worker_connections 1024;
+}
+http {
+    include /etc/nginx/mime.types;
+    default_type application/json;
+
+    server {
+        listen 80;
+        root /usr/share/nginx/html;
+
+        # 服务发现：AISI 知名端点
+        location = /.well-known/aisi.json {
+            try_files /.well-known/aisi.json =404;
+            add_header Access-Control-Allow-Origin *;
+        }
+
+        # 服务定义文件
+        location ~ ^/services/(.+)\.json$ {
+            try_files /services/$1.json =404;
+            add_header Access-Control-Allow-Origin *;
+        }
+
+        location / {
+            # 可添加默认首页
+            index index.html;
+        }
+    }
+}

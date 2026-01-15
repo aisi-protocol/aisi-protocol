@@ -1,0 +1,75 @@
+{
+  "aisi_version": "1.0",
+  "kind": "AtomicService",
+  "metadata": {
+    "id": "aisi://pizzahub/pepperoni-pizza-demo",
+    "name": "演示：经典意式辣香肠披萨外卖",
+    "service_type": "food_delivery",
+    "provider": {
+      "name": "披萨枢纽演示店",
+      "id": "pizzahub-demo"
+    },
+    "tags": ["演示", "披萨", "外卖", "快餐", "意大利风味"],
+    "base_endpoint": "http://localhost:8080/demo"
+  },
+  "extensions": {
+    "food_delivery": {
+      "dish": {
+        "name": "经典意式辣香肠披萨",
+        "description": "手工揉制饼底，配以意大利辣香肠、莫扎里拉奶酪和特制番茄酱。",
+        "unit_price": 89.00,
+        "currency": "CNY",
+        "allergens": ["麸质", "乳制品"],
+        "spicy_level": "中等"
+      },
+      "order_constraints": {
+        "min_order_quantity": 1,
+        "max_order_quantity": 5,
+        "delivery_fee": 0.00,
+        "estimated_prep_time": 25,
+        "unit": "分钟",
+        "available_time_slots": ["11:00-14:00", "17:00-21:00"]
+      },
+      "service_area": {
+        "type": "radius",
+        "center": {
+          "latitude": 31.2304,
+          "longitude": 121.4737
+        },
+        "radius_km": 5,
+        "supported_districts": ["浦东新区", "黄浦区", "静安区"]
+      },
+      "customization_options": [
+        {
+          "option": "饼底",
+          "choices": ["经典手拍", "薄脆", "芝心"]
+        },
+        {
+          "option": "额外配料",
+          "choices": ["蘑菇", "橄榄", "洋葱", "双倍奶酪"]
+        }
+      ]
+    }
+  },
+  "api": [
+    {
+      "name": "createDemoOrder",
+      "path": "/orders/demo",
+      "method": "POST",
+      "description": "创建一个演示披萨订单。",
+      "request_schema_ref": "#/extensions/food_delivery/demo_order_schema",
+      "response_example": {
+        "order_id": "demo_123456",
+        "status": "received",
+        "estimated_delivery": "30分钟",
+        "message": "这是一个演示订单，不会实际制作和配送。"
+      }
+    },
+    {
+      "name": "checkDemoStatus",
+      "path": "/orders/demo/{order_id}",
+      "method": "GET",
+      "description": "查询演示订单状态。"
+    }
+  ]
+}

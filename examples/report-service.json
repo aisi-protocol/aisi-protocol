@@ -1,0 +1,67 @@
+{
+  "aisi_version": "1.0",
+  "kind": "AtomicService",
+  "metadata": {
+    "id": "aisi://datainsight/market-analysis-report",
+    "name": "AI市场分析报告服务",
+    "service_type": "digital_service",
+    "provider": {
+      "name": "数据洞察 DataInsight",
+      "id": "datainsight"
+    },
+    "tags": ["报告服务", "市场分析", "AI生成", "商业智能", "PDF报告"],
+    "base_endpoint": "https://api.datainsight.com/aisi/v1"
+  },
+  "extensions": {
+    "digital_service": {
+      "service_description": "基于您提供的资料，生成专业的市场分析报告。",
+      "input_spec": {
+        "accepted_formats": ["PDF", "DOCX", "URL", "TXT", "MARKDOWN"],
+        "content_types": ["行业数据", "产品描述", "竞争对手信息", "市场趋势"],
+        "max_size_per_file": 50,
+        "unit": "MB"
+      },
+      "output_spec": {
+        "format": "PDF",
+        "typical_length": "15-30页",
+        "sections_included": ["执行摘要", "市场概况", "竞争格局", "用户分析", "机会与建议"],
+        "delivery_method": "电子邮件发送下载链接"
+      },
+      "service_tiers": [
+        {
+          "name": "标准版",
+          "delivery_time": "3个工作日",
+          "price": 999.00,
+          "currency": "CNY",
+          "features": ["基础分析", "10页报告", "1次修改"]
+        },
+        {
+          "name": "专业版",
+          "delivery_time": "5个工作日",
+          "price": 1999.00,
+          "features": ["深度分析", "25页报告", "数据可视化", "3次修改", "电话咨询"]
+        }
+      ],
+      "quality_assurance": {
+        "human_review": true,
+        "confidentiality": "NDA支持",
+        "revision_policy": "根据套餐包含修改次数"
+      }
+    }
+  },
+  "api": [
+    {
+      "name": "submitRequest",
+      "path": "/reports/request",
+      "method": "POST",
+      "description": "提交报告生成请求。",
+      "request_schema_ref": "#/extensions/digital_service/report_request_schema"
+    },
+    {
+      "name": "checkStatus",
+      "path": "/reports/{report_id}/status",
+      "method": "GET",
+      "description": "查询报告生成状态。"
+    }
+  ]
+}

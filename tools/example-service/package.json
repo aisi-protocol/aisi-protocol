@@ -1,0 +1,16 @@
+{
+  "name": "aisi-demo-pizza-service",
+  "version": "1.0.0",
+  "description": "A simple demo pizza service for AISI Protocol",
+  "main": "simple-pizza-service.js",
+  "scripts": {
+    "start": "node simple-pizza-service.js",
+    "dev": "nodemon simple-pizza-service.js"
+  },
+  "dependencies": {
+    "express": "^4.18.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

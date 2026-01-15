@@ -1,0 +1,65 @@
+{
+  "aisi_version": "1.0",
+  "kind": "AtomicService",
+  "metadata": {
+    "id": "aisi://quickfix/iphone-screen-repair",
+    "name": "iPhone 15 Pro 屏幕维修服务",
+    "service_type": "device_repair",
+    "provider": {
+      "name": "速修客 QuickFix",
+      "id": "quickfix"
+    },
+    "tags": ["手机维修", "iPhone", "屏幕更换", "上门服务", "苹果授权"],
+    "base_endpoint": "https://api.quickfix.com/aisi/v1"
+  },
+  "extensions": {
+    "device_repair": {
+      "target_device": {
+        "brand": "Apple",
+        "model": "iPhone 15 Pro",
+        "issue_type": "screen_damage"
+      },
+      "repair_actions": [
+        {
+          "action": "screen_replacement",
+          "part_type": "original_quality",
+          "warranty_days": 180
+        },
+        {
+          "action": "diagnostic_check",
+          "description": "全机功能检测"
+        }
+      ],
+      "service_details": {
+        "on_site": true,
+        "estimated_duration": "60分钟",
+        "price_range": {
+          "min": 299.00,
+          "max": 499.00,
+          "currency": "CNY",
+          "price_factors": ["屏幕材质", "维修方式"]
+        }
+      },
+      "service_coverage": {
+        "cities": ["北京", "上海", "广州", "深圳"],
+        "available_time": "09:00-21:00"
+      }
+    }
+  },
+  "api": [
+    {
+      "name": "scheduleRepair",
+      "path": "/repairs/schedule",
+      "method": "POST",
+      "description": "预约手机维修服务。",
+      "request_schema_ref": "#/extensions/device_repair/repair_request_schema"
+    },
+    {
+      "name": "getQuote",
+      "path": "/repairs/quote",
+      "method": "POST",
+      "description": "获取维修报价。",
+      "request_schema_ref": "#/extensions/device_repair/quote_request_schema"
+    }
+  ]
+}

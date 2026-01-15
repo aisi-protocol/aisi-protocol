@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AISI Protocol - Atomic Service Generator</title>
+    <style>
+        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif; }
+        body { background: #f5f7fa; color: #333; line-height: 1.6; padding: 20px; max-width: 1200px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 30px; }
+        h1 { color: #2c3e50; margin-bottom: 5px; }
+        .subtitle { color: #7f8c8d; font-size: 1.1em; }
+        .container { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        @media (max-width: 768px) { .container { grid-template-columns: 1fr; } }
+        .panel { background: white; border-radius: 10px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .panel h2 { margin-top: 0; color: #3498db; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        label { display: block; margin: 15px 0 5px; font-weight: bold; color: #555; }
+        input[type="text"], textarea, select {
+            width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 1em;
+        }
+        textarea { min-height: 80px; resize: vertical; font-family: monospace; }
+        button {
+            background: #3498db; color: white; border: none; padding: 12px 25px;
+            border-radius: 5px; cursor: pointer; font-size: 1em; font-weight: bold;
+            margin-top: 15px; transition: background 0.3s;
+        }
+        button:hover { background: #2980b9; }
+        #output { position: relative; }
+        #copyBtn {
+            position: absolute; top: 15px; right: 15px; background: #27ae60;
+            padding: 8px 15px; font-size: 0.9em;
+        }
+        #copyBtn:hover { background: #219653; }
+        #jsonOutput {
+            background: #f8f9fa; border: 1px solid #ddd; border-radius: 5px;
+            padding: 20px; min-height: 400px; overflow-x: auto;
+            white-space: pre-wrap; word-wrap: break-word;
+            font-family: 'Courier New', monospace; font-size: 0.95em;
+            line-height: 1.4;
+        }
+        .extension-field { margin: 15px 0; padding: 15px; background: #f9f9f9; border-radius: 5px; }
+        .extension-field label { margin-top: 0; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🛠️ AISI Protocol - Atomic Service Generator</h1>
+        <p class="subtitle">Generate a standard AISI v1.0 Atomic Service JSON definition.</p>
+    </header>
+
+    <div class="container">
+        <!-- Left Panel: Input Form -->
+        <div class="panel">
+            <h2>Service Definition</h2>
+            
+            <label for="serviceId">Service ID (URI)</label>
+            <input type="text" id="serviceId" placeholder="aisi://provider/service-name" value="aisi://pizzahub/pepperoni-pizza">
+            
+            <label for="serviceName">Service Name</label>
+            <input type="text" id="serviceName" placeholder="e.g., Pepperoni Pizza Delivery" value="Pepperoni Pizza Delivery">
+            
+            <label for="serviceType">Service Type</label>
+            <select id="serviceType">
+                <option value="food_delivery">food_delivery</option>
+                <option value="device_repair">device_repair</option>
+                <option value="digital_service">digital_service</option>
+            </select>
+            
+            <label for="providerName">Provider Name</label>
+            <input type="text" id="providerName" value="PizzaHub Downtown">
+            
+            <label for="providerId">Provider ID</label>
+            <input type="text" id="providerId" value="pizzahub">
+            
+            <label for="serviceTags">Tags (comma separated)</label>
+            <input type="text" id="serviceTags" value="pizza, delivery, italian">
+            
+            <label for="baseEndpoint">Base Endpoint</label>
+            <input type="text" id="baseEndpoint" value="https://api.example.com/aisi/v1">
+            
+            <!-- Dynamic Extensions Panel -->
+            <h3 style="margin-top: 30px;">Service Details (Extensions)</h3>
+            <div id="extensionsPanel">
+                <!-- Content will be dynamically inserted by JavaScript based on serviceType -->
+            </div>
+            
+            <div style="margin-top: 30px; text-align: center;">
+                <button id="generateBtn">Generate AISI Service JSON</button>
+            </div>
+        </div>
+
+        <!-- Right Panel: JSON Output -->
+        <div class="panel" id="output">
+            <h2>Generated JSON Output</h2>
+            <button id="copyBtn">Copy to Clipboard</button>
+            <pre id="jsonOutput">{
+  "aisi_version": "1.0",
+  "kind": "AtomicService",
+  "metadata": {
+    "id": "aisi://pizzahub/pepperoni-pizza",
+    "name": "Pepperoni Pizza Delivery",
+    "service_type": "food_delivery",
+    "provider": {
+      "name": "PizzaHub Downtown",
+      "id": "pizzahub"
+    },
+    "tags": ["pizza", "delivery", "italian"],
+    "base_endpoint": "https://api.example.com/aisi/v1"
+  },
+  "extensions": {
+    "food_delivery": {
+      "dish": {
+        "name": "Pepperoni Pizza",
+        "unit_price": 15.99
+      },
+      "order_constraints": {
+        "min_order_quantity": 1
+      }
+    }
+  },
+  "api": [
+    {
+      "name": "placeOrder",
+      "path": "/orders",
+      "method": "POST",
+      "request_schema_ref": "#/extensions/food_delivery/order_schema"
+    }
+  ]
+}</pre>
+        </div>
+    </div>
+
+    <script>
+        // Extension templates for each service type
+        const extensionTemplates = {
+            food_delivery: `
+                <div class="extension-field">
+                    <label>Dish Name <input type="text" class="ext-dish-name" value="Pepperoni Pizza"></label>
+                    <label>Unit Price <input type="number" class="ext-unit-price" value="15.99"></label>
+                    <label>Currency <input type="text" class="ext-currency" value="USD"></label>
+                </div>
+                <div class="extension-field">
+                    <label>Minimum Order Quantity <input type="number" class="ext-min-quantity" value="1"></label>
+                    <label>Delivery Fee <input type="number" class="ext-delivery-fee" value="2.99"></label>
+                </div>
+            `,
+            device_repair: `
+                <div class="extension-field">
+                    <label>Device Brand <input type="text" class="ext-device-brand" value="Apple"></label>
+                    <label>Device Model <input type="text" class="ext-device-model" value="iPhone 15 Pro"></label>
+                </div>
+                <div class="extension-field">
+                    <label>Repair Action <input type="text" class="ext-repair-action" value="Screen Replacement"></label>
+                    <label>Service Fee <input type="number" class="ext-service-fee" value="199.99"></label>
+                </div>
+            `,
+            digital_service: `
+                <div class="extension-field">
+                    <label>Input Format <input type="text" class="ext-input-format" value="PDF, URL"></label>
+                    <label>Output Format <input type="text" class="ext-output-format" value="PDF Report"></label>
+                </div>
+                <div class="extension-field">
+                    <label>Processing Time <input type="text" class="ext-processing-time" value="24 hours"></label>
+                    <label>Price <input type="number" class="ext-price" value="299.00"></label>
+                </div>
+            `
+        };
+
+        // Update extensions panel when service type changes
+        document.getElementById('serviceType').addEventListener('change', function() {
+            const type = this.value;
+            document.getElementById('extensionsPanel').innerHTML = extensionTemplates[type] || '';
+        });
+
+        // Initialize with default type
+        document.getElementById('extensionsPanel').innerHTML = extensionTemplates.food_delivery;
+
+        // Generate JSON function
+        document.getElementById('generateBtn').addEventListener('click', function() {
+            const serviceType = document.getElementById('serviceType').value;
+            
+            // Build extensions object based on service type
+            let extensions = {};
+            if (serviceType === 'food_delivery') {
+                extensions.food_delivery = {
+                    dish: {
+                        name: document.querySelector('.ext-dish-name')?.value || 'Unknown Dish',
+                        unit_price: parseFloat(document.querySelector('.ext-unit-price')?.value) || 0,
+                        currency: document.querySelector('.ext-currency')?.value || 'USD'
+                    },
+                    order_constraints: {
+                        min_order_quantity: parseInt(document.querySelector('.ext-min-quantity')?.value) || 1,
+                        delivery_fee: parseFloat(document.querySelector('.ext-delivery-fee')?.value) || 0
+                    }
+                };
+            } else if (serviceType === 'device_repair') {
+                extensions.device_repair = {
+                    target_device: {
+                        brand: document.querySelector('.ext-device-brand')?.value || 'Unknown',
+                        model: document.querySelector('.ext-device-model')?.value || 'Unknown'
+                    },
+                    repair_actions: [{
+                        action: document.querySelector('.ext-repair-action')?.value || 'Repair'
+                    }],
+                    service_fee: {
+                        amount: parseFloat(document.querySelector('.ext-service-fee')?.value) || 0,
+                        currency: 'USD'
+                    }
+                };
+            } else if (serviceType === 'digital_service') {
+                extensions.digital_service = {
+                    input_spec: {
+                        format: document.querySelector('.ext-input-format')?.value?.split(',') || []
+                    },
+                    output_spec: {
+                        format: document.querySelector('.ext-output-format')?.value || 'Unknown'
+                    },
+                    processing_time: document.querySelector('.ext-processing-time')?.value || 'Unknown',
+                    price: {
+                        amount: parseFloat(document.querySelector('.ext-price')?.value) || 0,
+                        currency: 'USD'
+                    }
+                };
+            }
+
+            // Build the complete service definition
+            const serviceDef = {
+                aisi_version: "1.0",
+                kind: "AtomicService",
+                metadata: {
+                    id: document.getElementById('serviceId').value.trim(),
+                    name: document.getElementById('serviceName').value.trim(),
+                    service_type: serviceType,
+                    provider: {
+                        name: document.getElementById('providerName').value.trim(),
+                        id: document.getElementById('providerId').value.trim()
+                    },
+                    tags: document.getElementById('serviceTags').value.split(',').map(t => t.trim()).filter(t => t),
+                    base_endpoint: document.getElementById('baseEndpoint').value.trim()
+                },
+                extensions: extensions,
+                api: [{
+                    name: "createOrder",
+                    path: "/orders",
+                    method: "POST",
+                    request_schema_ref: `#/extensions/${serviceType}/request_schema`
+                }]
+            };
+
+            // Pretty print JSON
+            document.getElementById('jsonOutput').textContent = JSON.stringify(serviceDef, null, 2);
+        });
+
+        // Copy to clipboard function
+        document.getElementById('copyBtn').addEventListener('click', function() {
+            const text = document.getElementById('jsonOutput').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = this.textContent;
+                this.textContent = 'Copied!';
+                setTimeout(() => { this.textContent = originalText; }, 2000);
+            }).catch(err => {
+                console.error('Copy failed:', err);
+            });
+        });
+    </script>
+</body>
+</html>
