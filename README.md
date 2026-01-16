@@ -4,6 +4,10 @@
   <img src="https://img.shields.io/badge/status-stable-brightgreen" alt="状态">
   <img src="https://img.shields.io/badge/中文-English-red" alt="语言">
 </p>
+<img src="https://img.shields.io/github/v/release/aisi-protocol/aisi-protocol?style=flat-square&label=Release" alt="Release">
+<img src="https://img.shields.io/badge/GitHub%20Pages-Live-success" alt="GitHub Pages">
+<img src="https://img.shields.io/github/actions/workflow/status/aisi-protocol/aisi-protocol/validate.yml?style=flat-square&label=CI" alt="CI Status">
+
 
 <h1 align="center">🎯 AISI Protocol</h1>
 <p align="center">
