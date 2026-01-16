@@ -1,0 +1,53 @@
+{
+  "aisi_protocol": "2026-01",
+  "discovery": {
+    "identifier": "aisi://did:web:pizzacompany.com/pizza-delivery"
+  },
+  "metadata": {
+    "name": "披萨外卖服务",
+    "provider": "披萨有限公司",
+    "version": "1.0.0",
+    "description": "30分钟内送达的现烤披萨外卖服务，支持多种口味选择、在线支付和实时订单追踪。",
+    "locale": "zh-CN"
+  },
+  "api": {
+    "endpoint": "https://api.pizzacompany.com/v1/orders",
+    "specification": {
+      "type": "openapi",
+      "version": "3.0.0",
+      "url": "https://api.pizzacompany.com/openapi.json"
+    }
+  },
+  "extensions": {
+    "privacy": {
+      "data_retention": "90d",
+      "gdpr_compliant": true,
+      "privacy_policy_url": "https://pizzacompany.com/privacy"
+    },
+    "billing": {
+      "currency": "CNY",
+      "min_amount": 30.00,
+      "payment_methods": ["alipay", "wechat_pay", "credit_card"],
+      "refund_policy": "30分钟内可取消订单并全额退款"
+    },
+    "geography": {
+      "supported_countries": ["CN"],
+      "supported_regions": ["北京市", "上海市", "广州市", "深圳市"],
+      "timezone": "Asia/Shanghai",
+      "delivery_areas": ["主城区", "近郊区"]
+    },
+    "ui": {
+      "color_scheme": "#FF6B35",
+      "icon_url": "https://pizzacompany.com/icon.png",
+      "short_description": "快速披萨配送",
+      "features": ["30分钟送达", "现烤现做", "多种支付", "实时追踪"]
+    },
+    "sla": {
+      "delivery_time": "30分钟",
+      "availability": "10:00-22:00",
+      "support_hours": "9:00-23:00",
+      "contact_email": "support@pizzacompany.com"
+    }
+  },
+  "_comment": "这是一个完整的AISI服务描述示例，展示了披萨外卖服务的标准描述格式。实际部署时，需要确保discovery.identifier中的DID可解析，并且api.endpoint可访问。"
+}

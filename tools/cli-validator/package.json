@@ -1,0 +1,66 @@
+{
+  "name": "aisi-validator",
+  "version": "1.0.0",
+  "description": "CLI tool for validating AISI Protocol v2026-01 service description files",
+  "main": "index.js",
+  "bin": {
+    "aisi-validate": "./bin/cli.js"
+  },
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "start": "node index.js",
+    "build": "pkg . --out-dir dist --targets node18-linux-x64,node18-macos-x64,node18-win-x64",
+    "prepublishOnly": "npm test && npm run lint"
+  },
+  "keywords": [
+    "aisi",
+    "protocol",
+    "validator",
+    "cli",
+    "validation",
+    "service-description",
+    "ai",
+    "standard"
+  ],
+  "author": "AISI Protocol Community",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aisi-protocol/aisi-protocol.git",
+    "directory": "tools/cli-validator"
+  },
+  "bugs": {
+    "url": "https://github.com/aisi-protocol/aisi-protocol/issues"
+  },
+  "homepage": "https://github.com/aisi-protocol/aisi-protocol/tree/main/tools/cli-validator",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "commander": "^10.0.0",
+    "boxen": "^7.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0",
+    "eslint": "^8.0.0",
+    "prettier": "^3.0.0",
+    "pkg": "^5.8.0"
+  },
+  "files": [
+    "bin/",
+    "index.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/aisi-protocol"
+  }
+}

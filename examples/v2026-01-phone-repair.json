@@ -1,0 +1,94 @@
+{
+  "aisi_protocol": "2026-01",
+  "discovery": {
+    "identifier": "aisi://did:web:phonerepair.com/phone-repair-service"
+  },
+  "metadata": {
+    "name": "手机维修服务",
+    "provider": "快速维修科技有限公司",
+    "version": "2.1.0",
+    "description": "提供专业手机维修服务，包括屏幕更换、电池更换、进水维修、系统故障修复等。支持上门维修和到店维修两种模式。",
+    "locale": "zh-CN"
+  },
+  "api": {
+    "endpoint": "https://api.phonerepair.com/v2/repair-orders",
+    "specification": {
+      "type": "openapi",
+      "version": "3.1.0",
+      "url": "https://api.phonerepair.com/docs/openapi.yaml"
+    }
+  },
+  "extensions": {
+    "privacy": {
+      "data_retention": "180d",
+      "gdpr_compliant": true,
+      "data_encryption": true,
+      "privacy_policy_url": "https://phonerepair.com/privacy"
+    },
+    "billing": {
+      "currency": "CNY",
+      "payment_methods": ["alipay", "wechat_pay", "bank_transfer", "cash"],
+      "invoice_support": true,
+      "warranty_period": "90天",
+      "deposit_required": false
+    },
+    "geography": {
+      "service_type": "上门服务",
+      "supported_cities": ["北京市", "上海市", "广州市", "深圳市", "杭州市"],
+      "service_radius": "市区范围20公里内",
+      "timezone": "Asia/Shanghai",
+      "operating_hours": {
+        "weekdays": "9:00-20:00",
+        "weekends": "10:00-18:00",
+        "emergency": true
+      }
+    },
+    "ui": {
+      "color_scheme": "#4A90E2",
+      "icon_url": "https://phonerepair.com/icons/repair.png",
+      "short_description": "专业手机维修，快速上门",
+      "features": [
+        "屏幕更换",
+        "电池更换", 
+        "进水维修",
+        "系统修复",
+        "数据恢复",
+        "配件更换"
+      ],
+      "supported_brands": ["Apple", "华为", "小米", "OPPO", "vivo", "三星"]
+    },
+    "service_details": {
+      "repair_types": [
+        {
+          "name": "屏幕更换",
+          "estimated_time": "1-2小时",
+          "price_range": "200-800元",
+          "warranty": "180天"
+        },
+        {
+          "name": "电池更换",
+          "estimated_time": "1小时",
+          "price_range": "150-400元", 
+          "warranty": "365天"
+        },
+        {
+          "name": "进水维修",
+          "estimated_time": "24-48小时",
+          "price_range": "300-1000元",
+          "warranty": "90天"
+        }
+      ],
+      "technician_qualification": "持证维修工程师",
+      "parts_source": "原厂或认证配件",
+      "diagnostic_fee": "免费",
+      "estimated_time_slots": ["上午", "下午", "晚上"]
+    },
+    "quality_assurance": {
+      "success_rate": "95%",
+      "customer_rating": "4.8/5.0",
+      "repair_count": "10000+",
+      "certifications": ["ISO9001", "电子产品维修资质"]
+    }
+  },
+  "_comment": "手机维修服务AISI描述示例。展示了如何描述一个包含多种服务类型、定价信息和地理限制的复杂服务。实际使用时，需要根据具体业务调整服务详情和扩展字段。"
+}

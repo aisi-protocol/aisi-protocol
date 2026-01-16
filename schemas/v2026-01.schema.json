@@ -1,0 +1,258 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://aisi-protocol.org/schemas/v2026-01.json",
+  "title": "AISI Protocol Schema v2026-01",
+  "description": "JSON Schema for validating AISI Protocol v1.0 (2026-01) service descriptions",
+  "type": "object",
+  "required": [
+    "aisi_protocol",
+    "discovery",
+    "metadata",
+    "api"
+  ],
+  "properties": {
+    "aisi_protocol": {
+      "type": "string",
+      "const": "2026-01",
+      "description": "Protocol version identifier. Must be exactly '2026-01' for v1.0.",
+      "examples": ["2026-01"]
+    },
+    "discovery": {
+      "type": "object",
+      "required": ["identifier"],
+      "properties": {
+        "identifier": {
+          "type": "string",
+          "pattern": "^aisi://did:(web|key|ion):[^/]+/.+$",
+          "description": "Service unique identifier in aisi://did:{method}:{id}/{service} format",
+          "examples": [
+            "aisi://did:web:example.com/service",
+            "aisi://did:key:z6Mkf5rGM/service",
+            "aisi://did:ion:EiClkZ/service"
+          ],
+          "minLength": 10,
+          "maxLength": 500
+        }
+      },
+      "additionalProperties": true,
+      "description": "Service discovery information"
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "provider", "version"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Human-readable service name",
+          "minLength": 1,
+          "maxLength": 100,
+          "examples": ["Pizza Delivery Service", "Weather Forecast API"]
+        },
+        "provider": {
+          "type": "string",
+          "description": "Service provider name or identifier",
+          "minLength": 1,
+          "maxLength": 100,
+          "examples": ["Pizza Company Inc.", "Weather Data Corp."]
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Service version using semantic versioning (major.minor.patch)",
+          "examples": ["1.0.0", "2.1.5"]
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed description of service functionality",
+          "minLength": 0,
+          "maxLength": 500,
+          "default": ""
+        },
+        "locale": {
+          "type": "string",
+          "description": "Language and region locale code (BCP 47)",
+          "pattern": "^[a-z]{2}(-[A-Z]{2})?$",
+          "examples": ["zh-CN", "en-US", "ja-JP"],
+          "default": "en-US"
+        }
+      },
+      "additionalProperties": true,
+      "description": "Service metadata and descriptive information"
+    },
+    "api": {
+      "type": "object",
+      "required": ["endpoint"],
+      "properties": {
+        "endpoint": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https?://",
+          "description": "API endpoint URL for service invocation",
+          "examples": [
+            "https://api.example.com/v1",
+            "http://localhost:8080/api"
+          ]
+        },
+        "specification": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["openapi", "graphql", "grpc", "asyncapi", "other"],
+              "description": "Type of API specification",
+              "default": "openapi"
+            },
+            "version": {
+              "type": "string",
+              "description": "Version of the API specification",
+              "examples": ["3.0.0", "2.0", "1.0"]
+            },
+            "url": {
+              "type": "string",
+              "format": "uri",
+              "description": "URL to the full API specification document"
+            }
+          },
+          "additionalProperties": true,
+          "description": "API specification details"
+        }
+      },
+      "additionalProperties": true,
+      "description": "API interface definition and specifications"
+    },
+    "extensions": {
+      "type": "object",
+      "description": "Optional extension fields for additional service information",
+      "properties": {
+        "privacy": {
+          "type": "object",
+          "description": "Privacy-related information and policies",
+          "properties": {
+            "data_retention": {
+              "type": "string",
+              "description": "Data retention period (e.g., '30d', '1y')"
+            },
+            "gdpr_compliant": {
+              "type": "boolean",
+              "description": "GDPR compliance status"
+            },
+            "privacy_policy_url": {
+              "type": "string",
+              "format": "uri",
+              "description": "URL to privacy policy"
+            }
+          },
+          "additionalProperties": true
+        },
+        "billing": {
+          "type": "object",
+          "description": "Billing and pricing information",
+          "properties": {
+            "currency": {
+              "type": "string",
+              "pattern": "^[A-Z]{3}$",
+              "description": "Currency code (ISO 4217)",
+              "examples": ["CNY", "USD", "EUR"]
+            },
+            "payment_methods": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Supported payment methods"
+            }
+          },
+          "additionalProperties": true
+        },
+        "geography": {
+          "type": "object",
+          "description": "Geographical service constraints",
+          "properties": {
+            "supported_countries": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[A-Z]{2}$"
+              },
+              "description": "ISO 3166-1 alpha-2 country codes"
+            },
+            "timezone": {
+              "type": "string",
+              "description": "Primary timezone for service operations"
+            }
+          },
+          "additionalProperties": true
+        },
+        "ui": {
+          "type": "object",
+          "description": "User interface hints and preferences",
+          "properties": {
+            "color_scheme": {
+              "type": "string",
+              "pattern": "^#[0-9A-Fa-f]{6}$",
+              "description": "Primary color hex code"
+            },
+            "icon_url": {
+              "type": "string",
+              "format": "uri",
+              "description": "URL to service icon"
+            },
+            "short_description": {
+              "type": "string",
+              "description": "Brief description for UI display"
+            }
+          },
+          "additionalProperties": true
+        },
+        "custom": {
+          "type": "object",
+          "description": "Custom extension fields for service-specific information",
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": {
+        "type": "object",
+        "description": "Additional custom extensions",
+        "additionalProperties": true
+      }
+    },
+    "_comment": {
+      "type": "string",
+      "description": "Human-readable comments (ignored by validators)"
+    }
+  },
+  "additionalProperties": true,
+  "definitions": {
+    "SemVer": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version string"
+    },
+    "DIDIdentifier": {
+      "type": "string",
+      "pattern": "^aisi://did:(web|key|ion):[^/]+/.+$",
+      "description": "AISI service identifier with DID"
+    },
+    "LocaleCode": {
+      "type": "string",
+      "pattern": "^[a-z]{2}(-[A-Z]{2})?$",
+      "description": "BCP 47 language tag"
+    }
+  },
+  "examples": [
+    {
+      "aisi_protocol": "2026-01",
+      "discovery": {
+        "identifier": "aisi://did:web:example.com/service"
+      },
+      "metadata": {
+        "name": "示例服务",
+        "provider": "示例公司",
+        "version": "1.0.0"
+      },
+      "api": {
+        "endpoint": "https://api.example.com/v1"
+      }
+    }
+  ]
+}

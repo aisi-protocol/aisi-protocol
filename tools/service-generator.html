@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AISI 服务描述生成器 v1.0</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+        
+        .protocol-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .form-section, .preview-section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 25px;
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            color: #667eea;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title i {
+            font-size: 1.2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .required::after {
+            content: " *";
+            color: #e53e3e;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        input.error, textarea.error {
+            border-color: #e53e3e;
+        }
+        
+        .error-message {
+            color: #e53e3e;
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .hint {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .field-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+        
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            flex: 1;
+        }
+        
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+        
+        .btn-success {
+            background: #48bb78;
+            color: white;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .preview {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 6px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            max-height: 500px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            margin-top: 20px;
+        }
+        
+        .json-key {
+            color: #63b3ed;
+        }
+        
+        .json-string {
+            color: #68d391;
+        }
+        
+        .json-number {
+            color: #fbb6ce;
+        }
+        
+        .json-boolean {
+            color: #f6ad55;
+        }
+        
+        .json-null {
+            color: #a0aec0;
+        }
+        
+        .status {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .status.success {
+            background: #c6f6d5;
+            color: #22543d;
+            border-left: 4px solid #48bb78;
+        }
+        
+        .status.error {
+            background: #fed7d7;
+            color: #742a2a;
+            border-left: 4px solid #e53e3e;
+        }
+        
+        .status.warning {
+            background: #feebc8;
+            color: #744210;
+            border-left: 4px solid #ed8936;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            color: #666;
+            border-top: 1px solid #ddd;
+        }
+        
+        .example-selector {
+            margin-bottom: 15px;
+        }
+        
+        .example-selector select {
+            background: white;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-bolt"></i> AISI 服务描述生成器</h1>
+            <div class="subtitle">为你的服务创建符合 AISI Protocol v1.0 (2026-01) 规范的描述文件</div>
+            <div class="protocol-badge">协议版本: 2026-01</div>
+        </header>
+        
+        <div class="main-content">
+            <!-- 左侧：表单区域 -->
+            <div class="form-section">
+                <h2 class="section-title"><i class="fas fa-edit"></i> 填写服务信息</h2>
+                
+                <div class="example-selector">
+                    <label>加载示例:</label>
+                    <select id="exampleSelect" onchange="loadExample(this.value)">
+                        <option value="">-- 选择示例 --</option>
+                        <option value="minimal">最小示例</option>
+                        <option value="pizza">披萨外卖服务</option>
+                        <option value="repair">手机维修服务</option>
+                        <option value="report">商业报告服务</option>
+                    </select>
+                </div>
+                
+                <div id="statusArea"></div>
+                
+                <form id="aisiForm">
+                    <!-- 必填字段部分 -->
+                    <div class="form-group">
+                        <h3><i class="fas fa-star" style="color: #e53e3e; font-size: 0.8rem;"></i> 必填字段 (v1.0核心)</h3>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="required">服务标识符</label>
+                        <input type="text" id="identifier" 
+                               placeholder="aisi://did:web:example.com/service"
+                               pattern="aisi://did:(web|key|ion):[^/]+/.+"
+                               required>
+                        <div class="hint">格式: aisi://did:web:域名/服务名。示例: aisi://did:web:pizzacompany.com/delivery</div>
+                        <div class="error-message" id="identifierError">请输入有效的aisi://标识符</div>
+                    </div>
+                    
+                    <div class="field-row">
+                        <div class="form-group">
+                            <label class="required">服务名称</label>
+                            <input type="text" id="name" placeholder="例如: 披萨外卖服务" required maxlength="100">
+                            <div class="error-message" id="nameError">服务名称不能为空</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="required">提供方</label>
+                            <input type="text" id="provider" placeholder="例如: 披萨有限公司" required maxlength="100">
+                            <div class="error-message" id="providerError">提供方不能为空</div>
+                        </div>
+                    </div>
+                    
+                    <div class="field-row">
+                        <div class="form-group">
+                            <label class="required">版本号</label>
+                            <input type="text" id="version" placeholder="1.0.0" 
+                                   pattern="^\d+\.\d+\.\d+$" required>
+                            <div class="hint">语义化版本: 主版本.次版本.修订号</div>
+                            <div class="error-message" id="versionError">请输入有效的版本号，如 1.0.0</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>语言区域</label>
+                            <select id="locale">
+                                <option value="zh-CN">简体中文 (zh-CN)</option>
+                                <option value="en-US">English (en-US)</option>
+                                <option value="ja-JP">日本語 (ja-JP)</option>
+                                <option value="ko-KR">한국어 (ko-KR)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="required">API端点</label>
+                        <input type="url" id="endpoint" 
+                               placeholder="https://api.example.com/v1"
+                               pattern="^https?://.+" required>
+                        <div class="hint">服务调用的实际API地址，支持 http:// 或 https://</div>
+                        <div class="error-message" id="endpointError">请输入有效的URL地址</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>服务描述</label>
+                        <textarea id="description" rows="3" 
+                                  placeholder="详细描述你的服务功能..."></textarea>
+                        <div class="hint">可选的详细描述，帮助AI理解服务能力</div>
+                    </div>
+                    
+                    <!-- API规范部分 -->
+                    <div class="form-group">
+                        <h3><i class="fas fa-code"></i> API规范</h3>
+                    </div>
+                    
+                    <div class="field-row">
+                        <div class="form-group">
+                            <label>API类型</label>
+                            <select id="apiType">
+                                <option value="openapi">OpenAPI</option>
+                                <option value="graphql">GraphQL</option>
+                                <option value="grpc">gRPC</option>
+                                <option value="asyncapi">AsyncAPI</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>规范版本</label>
+                            <input type="text" id="specVersion" placeholder="3.0.0">
+                        </div>
+                    </div>
+                    
+                    <!-- 扩展字段部分 -->
+                    <div class="form-group">
+                        <h3><i class="fas fa-puzzle-piece"></i> 扩展字段 (可选)</h3>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>隐私信息</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="gdprCompliant">
+                                <label for="gdprCompliant" style="font-weight: normal;">GDPR合规</label>
+                            </div>
+                        </div>
+                        <input type="text" id="dataRetention" placeholder="数据保留期，如: 30d" style="margin-top: 10px;">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>支付方式</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="payAlipay" checked>
+                                <label for="payAlipay" style="font-weight: normal;">支付宝</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="payWechat" checked>
+                                <label for="payWechat" style="font-weight: normal;">微信支付</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="payCredit">
+                                <label for="payCredit" style="font-weight: normal;">信用卡</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="actions">
+                        <button type="button" class="btn-secondary" onclick="resetForm()">
+                            <i class="fas fa-redo"></i> 重置
+                        </button>
+                        <button type="button" class="btn-primary" onclick="generateJSON()">
+                            <i class="fas fa-magic"></i> 生成JSON
+                        </button>
+                        <button type="button" class="btn-success" onclick="validateJSON()" id="validateBtn" disabled>
+                            <i class="fas fa-check-circle"></i> 验证格式
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- 右侧：预览区域 -->
+            <div class="preview-section">
+                <h2 class="section-title"><i class="fas fa-eye"></i> JSON预览</h2>
+                
+                <div class="actions">
+                    <button type="button" class="btn-secondary" onclick="copyToClipboard()">
+                        <i class="far fa-copy"></i> 复制JSON
+                    </button>
+                    <button type="button" class="btn-primary" onclick="downloadJSON()" id="downloadBtn" disabled>
+                        <i class="fas fa-download"></i> 下载文件
+                    </button>
+                </div>
+                
+                <div class="preview" id="jsonPreview">
+// 填写左侧表单后，JSON将在这里显示
+// 支持语法高亮和实时预览
+                </div>
+                
+                <div class="hint" style="margin-top: 15px;">
+                    <i class="fas fa-info-circle"></i> 提示: 生成的JSON符合AISI Protocol v2026-01规范。保存为 .json 文件后，可部署到 .well-known/aisi/ 目录。
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2026 AISI Protocol | 协议版本: v1.0 (2026-01) | <a href="https://github.com/aisi-protocol/aisi-protocol" target="_blank">GitHub仓库</a></p>
+            <p style="font-size: 0.9rem; margin-top: 10px;">本工具生成的服务描述文件符合 AISI Protocol 规范，可用于让AI智能体发现和调用你的服务。</p>
+        </footer>
+    </div>
+
+    <script>
+        // 初始化状态
+        let currentJSON = null;
+        
+        // 加载示例数据
+        function loadExample(example) {
+            resetForm();
+            
+            const examples = {
+                minimal: {
+                    identifier: "aisi://did:web:example.com/minimal-service",
+                    name: "最小示例服务",
+                    provider: "示例公司",
+                    version: "1.0.0",
+                    locale: "zh-CN",
+                    endpoint: "https://api.example.com/v1",
+                    description: "这是一个最小化的AISI服务描述示例"
+                },
+                pizza: {
+                    identifier: "aisi://did:web:pizzacompany.com/pizza-delivery",
+                    name: "披萨外卖服务",
+                    provider: "披萨有限公司",
+                    version: "1.0.0",
+                    locale: "zh-CN",
+                    endpoint: "https://api.pizzacompany.com/v1/orders",
+                    description: "30分钟内送达的现烤披萨外卖服务",
+                    apiType: "openapi",
+                    specVersion: "3.0.0",
+                    gdprCompliant: true,
+                    dataRetention: "90d",
+                    payAlipay: true,
+                    payWechat: true,
+                    payCredit: false
+                },
+                repair: {
+                    identifier: "aisi://did:web:phonerepair.com/repair",
+                    name: "手机维修服务",
+                    provider: "快速维修科技",
+                    version: "2.1.0",
+                    locale: "zh-CN",
+                    endpoint: "https://api.phonerepair.com/v2/repair",
+                    description: "专业手机维修服务，支持屏幕更换、电池更换等",
+                    apiType: "openapi",
+                    specVersion: "3.1.0"
+                },
+                report: {
+                    identifier: "aisi://did:web:datainsights.com/report",
+                    name: "商业智能报告服务",
+                    provider: "数据洞察科技",
+                    version: "3.2.1",
+                    locale: "zh-CN",
+                    endpoint: "https://api.datainsights.com/v3/reports",
+                    description: "基于AI的商业智能报告生成服务",
+                    apiType: "openapi",
+                    specVersion: "3.0.0",
+                    gdprCompliant: true,
+                    dataRetention: "365d"
+                }
+            };
+            
+            if (example && examples[example]) {
+                const data = examples[example];
+                document.getElementById('identifier').value = data.identifier;
+                document.getElementById('name').value = data.name;
+                document.getElementById('provider').value = data.provider;
+                document.getElementById('version').value = data.version;
+                document.getElementById('locale').value = data.locale;
+                document.getElementById('endpoint').value = data.endpoint;
+                document.getElementById('description').value = data.description || '';
+                document.getElementById('apiType').value = data.apiType || 'openapi';
+                document.getElementById('specVersion').value = data.specVersion || '';
+                
+                if (data.gdprCompliant) {
+                    document.getElementById('gdprCompliant').checked = true;
+                }
+                if (data.dataRetention) {
+                    document.getElementById('dataRetention').value = data.dataRetention;
+                }
+                if (data.payAlipay !== undefined) {
+                    document.getElementById('payAlipay').checked = data.payAlipay;
+                }
+                if (data.payWechat !== undefined) {
+                    document.getElementById('payWechat').checked = data.payWechat;
+                }
+                if (data.payCredit !== undefined) {
+                    document.getElementById('payCredit').checked = data.payCredit;
+                }
+                
+                showStatus(`已加载 ${example} 示例`, 'success');
+                generateJSON();
+            }
+        }
+        
+        // 重置表单
+        function resetForm() {
+            document.getElementById('aisiForm').reset();
+            document.getElementById('jsonPreview').textContent = '// 填写左侧表单后，JSON将在这里显示\n// 支持语法高亮和实时预览';
+            document.getElementById('validateBtn').disabled = true;
+            document.getElementById('downloadBtn').disabled = true;
+            currentJSON = null;
+            clearErrors();
+            showStatus('表单已重置', 'success');
+        }
+        
+        // 清除错误提示
+        function clearErrors() {
+            const errors = document.querySelectorAll('.error-message');
+            errors.forEach(error => error.style.display = 'none');
+            
+            const inputs = document.querySelectorAll('input.error');
+            inputs.forEach(input => input.classList.remove('error'));
+        }
+        
+        // 显示状态消息
+        function showStatus(message, type = 'info') {
+            const statusArea = document.getElementById('statusArea');
+            statusArea.innerHTML = `
+                <div class="status ${type}">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                    ${message}
+                </div>
+            `;
+            statusArea.style.display = 'block';
+            
+            // 5秒后自动隐藏
+            setTimeout(() => {
+                statusArea.style.display = 'none';
+            }, 5000);
+        }
+        
+        // 验证表单
+        function validateForm() {
+            clearErrors();
+            let isValid = true;
+            
+            // 验证必填字段
+            const requiredFields = [
+                { id: 'identifier', name: '服务标识符', pattern: /^aisi:\/\/did:(web|key|ion):[^/]+\/.+$/ },
+                { id: 'name', name: '服务名称' },
+                { id: 'provider', name: '提供方' },
+                { id: 'version', name: '版本号', pattern: /^\d+\.\d+\.\d+$/ },
+                { id: 'endpoint', name: 'API端点', pattern: /^https?:\/\/.+/ }
+            ];
+            
+            requiredFields.forEach(field => {
+                const input = document.getElementById(field.id);
+                const value = input.value.trim();
+                
+                if (!value) {
+                    showError(field.id, `${field.name}不能为空`);
+                    isValid = false;
+                } else if (field.pattern && !field.pattern.test(value)) {
+                    showError(field.id, `${field.name}格式不正确`);
+                    isValid = false;
+                }
+            });
+            
+            return isValid;
+        }
+        
+        // 显示错误
+        function showError(fieldId, message) {
+            const input = document.getElementById(fieldId);
+            const error = document.getElementById(fieldId + 'Error');
+            
+            input.classList.add('error');
+            error.textContent = message;
+            error.style.display = 'block';
+        }
+        
+        // 生成JSON
+        function generateJSON() {
+            if (!validateForm()) {
+                showStatus('请修正表单中的错误', 'error');
+                return;
+            }
+            
+            // 收集表单数据
+            const paymentMethods = [];
+            if (document.getElementById('payAlipay').checked) paymentMethods.push('alipay');
+            if (document.getElementById('payWechat').checked) paymentMethods.push('wechat_pay');
+            if (document.getElementById('payCredit').checked) paymentMethods.push('credit_card');
+            
+            const dataRetention = document.getElementById('dataRetention').value.trim();
+            
+            // 构建JSON对象
+            const aisiJSON = {
+                aisi_protocol: "2026-01",
+                discovery: {
+                    identifier: document.getElementById('identifier').value.trim()
+                },
+                metadata: {
+                    name: document.getElementById('name').value.trim(),
+                    provider: document.getElementById('provider').value.trim(),
+                    version: document.getElementById('version').value.trim()
+                },
+                api: {
+                    endpoint: document.getElementById('endpoint').value.trim()
+                }
+            };
+            
+            // 添加可选字段
+            const description = document.getElementById('description').value.trim();
+            const locale = document.getElementById('locale').value;
+            const apiType = document.getElementById('apiType').value;
+            const specVersion = document.getElementById('specVersion').value.trim();
+            
+            if (description) {
+                aisiJSON.metadata.description = description;
+            }
+            
+            if (locale !== 'zh-CN') {
+                aisiJSON.metadata.locale = locale;
+            }
+            
+            if (apiType || specVersion) {
+                aisiJSON.api.specification = {};
+                if (apiType) aisiJSON.api.specification.type = apiType;
+                if (specVersion) aisiJSON.api.specification.version = specVersion;
+            }
+            
+            // 添加扩展字段
+            const extensions = {};
+            
+            if (document.getElementById('gdprCompliant').checked || dataRetention) {
+                extensions.privacy = {};
+                if (document.getElementById('gdprCompliant').checked) {
+                    extensions.privacy.gdpr_compliant = true;
+                }
+                if (dataRetention) {
+                    extensions.privacy.data_retention = dataRetention;
+                }
+            }
+            
+            if (paymentMethods.length > 0) {
+                extensions.billing = {
+                    currency: "CNY",
+                    payment_methods: paymentMethods
+                };
+            }
+            
+            if (Object.keys(extensions).length > 0) {
+                aisiJSON.extensions = extensions;
+            }
+            
+            // 保存并显示
+            currentJSON = aisiJSON;
+            displayJSON(aisiJSON);
+            
+            // 启用按钮
+            document.getElementById('validateBtn').disabled = false;
+            document.getElementById('downloadBtn').disabled = false;
+            
+            showStatus('JSON生成成功！', 'success');
+        }
+        
+        // 显示JSON（带语法高亮）
+        function displayJSON(json) {
+            const jsonString = JSON.stringify(json, null, 2);
+            const highlighted = syntaxHighlight(jsonString);
+            document.getElementById('jsonPreview').innerHTML = highlighted;
+        }
+        
+        // JSON语法高亮
+        function syntaxHighlight(json) {
+            json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?)/g, function(match) {
+                let cls = 'json-number';
+                if (/^"/.test(match)) {
+                    if (/:$/.test(match)) {
+                        cls = 'json-key';
+                    } else {
+                        cls = 'json-string';
+                    }
+                } else if (/true|false/.test(match)) {
+                    cls = 'json-boolean';
+                } else if (/null/.test(match)) {
+                    cls = 'json-null';
+                }
+                return '<span class="' + cls + '">' + match + '</span>';
+            });
+        }
+        
+        // 验证JSON格式
+        function validateJSON() {
+            if (!currentJSON) {
+                showStatus('请先生成JSON', 'warning');
+                return;
+            }
+            
+            // 简单验证
+            const errors = [];
+            
+            // 检查协议版本
+            if (currentJSON.aisi_protocol !== "2026-01") {
+                errors.push('协议版本必须为 "2026-01"');
+            }
+            
+            // 检查标识符格式
+            if (!currentJSON.discovery || !currentJSON.discovery.identifier) {
+                errors.push('缺少服务标识符');
+            } else if (!currentJSON.discovery.identifier.startsWith('aisi://')) {
+                errors.push('服务标识符必须以 aisi:// 开头');
+            }
+            
+            // 检查版本号格式
+            if (currentJSON.metadata && currentJSON.metadata.version) {
+                const versionRegex = /^\d+\.\d+\.\d+$/;
+                if (!versionRegex.test(currentJSON.metadata.version)) {
+                    errors.push('版本号必须符合语义化版本格式 (如 1.0.0)');
+                }
+            }
+            
+            // 显示验证结果
+            if (errors.length === 0) {
+                showStatus('✅ 验证通过！符合 AISI v2026-01 规范', 'success');
+            } else {
+                showStatus('❌ 验证失败：' + errors.join('，'), 'error');
+            }
+        }
+        
+        // 复制到剪贴板
+        function copyToClipboard() {
+            if (!currentJSON) {
+                showStatus('没有可复制的内容', 'warning');
+                return;
+            }
+            
+            const jsonString = JSON.stringify(currentJSON, null, 2);
+            navigator.clipboard.writeText(jsonString)
+                .then(() => {
+                    showStatus('已复制到剪贴板', 'success');
+                })
+                .catch(err => {
+                    showStatus('复制失败: ' + err, 'error');
+                });
+        }
+        
+        // 下载JSON文件
+        function downloadJSON() {
+            if (!currentJSON) {
+                showStatus('没有可下载的内容', 'warning');
+                return;
+            }
+            
+            const jsonString = JSON.stringify(currentJSON, null, 2);
+            const blob = new Blob([jsonString], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const serviceName = currentJSON.metadata.name || 'service';
+            const filename = serviceName.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase() + '.json';
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showStatus('文件下载成功: ' + filename, 'success');
+        }
+        
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 添加实时验证
+            const inputs = document.querySelectorAll('input[required]');
+            inputs.forEach(input => {
+                input.addEventListener('blur', function() {
+                    if (this.value.trim()) {
+                        this.classList.remove('error');
+                        const error = document.getElementById(this.id + 'Error');
+                        if (error) error.style.display = 'none';
+                    }
+                });
+            });
+            
+            // 加载最小示例
+            setTimeout(() => {
+                loadExample('minimal');
+            }, 100);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+{
+  "aisi_protocol": "2026-01",
+  "discovery": {
+    "identifier": "aisi://did:web:datainsights.com/business-report"
+  },
+  "metadata": {
+    "name": "商业智能报告服务",
+    "provider": "数据洞察科技有限公司",
+    "version": "3.2.1",
+    "description": "基于人工智能的商业智能报告生成服务。支持市场分析报告、竞品分析报告、财务分析报告等多种报告类型，可自定义数据源和分析维度。",
+    "locale": "zh-CN"
+  },
+  "api": {
+    "endpoint": "https://api.datainsights.com/v3/reports",
+    "specification": {
+      "type": "openapi",
+      "version": "3.0.0",
+      "url": "https://api.datainsights.com/swagger.json"
+    }
+  },
+  "extensions": {
+    "privacy": {
+      "data_retention": "365d",
+      "gdpr_compliant": true,
+      "ccpa_compliant": true,
+      "data_anonymization": true,
+      "encryption_level": "AES-256",
+      "privacy_policy_url": "https://datainsights.com/privacy",
+      "data_processing_agreement": true
+    },
+    "billing": {
+      "currency": "CNY",
+      "pricing_model": "usage_based",
+      "payment_methods": ["alipay", "wechat_pay", "credit_card", "bank_transfer", "enterprise_invoice"],
+      "free_tier": {
+        "monthly_credits": 5,
+        "report_types": ["basic_analysis"],
+        "data_sources": 3
+      },
+      "paid_plans": [
+        {
+          "name": "基础版",
+          "monthly_fee": 299,
+          "features": ["标准报告", "5个数据源", "基础分析维度"]
+        },
+        {
+          "name": "专业版", 
+          "monthly_fee": 899,
+          "features": ["高级报告", "无限数据源", "AI深度分析", "实时数据更新"]
+        },
+        {
+          "name": "企业版",
+          "monthly_fee": 2999,
+          "features": ["定制报告", "私有化部署", "API优先支持", "SLA保障"]
+        }
+      ]
+    },
+    "capabilities": {
+      "report_types": [
+        "市场分析报告",
+        "竞品分析报告", 
+        "财务分析报告",
+        "用户行为报告",
+        "趋势预测报告",
+        "风险评估报告"
+      ],
+      "data_sources": [
+        "公开数据库",
+        "社交媒体数据",
+        "电商平台数据",
+        "企业内部数据",
+        "第三方API",
+        "实时数据流"
+      ],
+      "analysis_dimensions": [
+        "时间序列分析",
+        "地域分布分析",
+        "用户画像分析",
+        "价格弹性分析",
+        "市场份额分析",
+        "增长趋势预测"
+      ],
+      "output_formats": ["PDF", "Excel", "JSON", "HTML", "PowerPoint"],
+      "delivery_methods": ["email", "api_callback", "web_download", "cloud_storage"],
+      "processing_time": {
+        "standard": "2-4小时",
+        "express": "30分钟",
+        "batch": "24小时"
+      }
+    },
+    "ai_features": {
+      "natural_language_query": true,
+      "automated_insights": true,
+      "predictive_analytics": true,
+      "anomaly_detection": true,
+      "sentiment_analysis": true,
+      "topic_modeling": true,
+      "model_explainability": true
+    },
+    "quality_metrics": {
+      "data_freshness": "实时更新",
+      "report_accuracy": "99.5%",
+      "processing_reliability": "99.9%",
+      "customer_satisfaction": "4.9/5.0",
+      "uptime_sla": "99.95%",
+      "support_response_time": "15分钟内"
+    },
+    "integration": {
+      "prebuilt_connectors": [
+        "Salesforce",
+        "Google Analytics",
+        "Shopify", 
+        "MySQL/PostgreSQL",
+        "AWS S3",
+        "Microsoft Power BI"
+      ],
+      "custom_integration": true,
+      "api_rate_limit": "1000请求/分钟",
+      "webhook_support": true,
+      "sdk_availability": ["Python", "JavaScript", "Java", "Go"]
+    },
+    "security": {
+      "authentication_methods": ["api_key", "oauth2", "jwt"],
+      "encryption_in_transit": true,
+      "encryption_at_rest": true,
+      "access_logging": true,
+      "audit_trail": true,
+      "compliance_certifications": ["ISO27001", "SOC2"]
+    },
+    "support": {
+      "support_channels": ["email", "chat", "phone", "ticketing_system"],
+      "support_hours": "7x24",
+      "documentation_url": "https://docs.datainsights.com",
+      "community_forum": "https://community.datainsights.com",
+      "training_resources": true,
+      "dedicated_account_manager": "企业版客户"
+    }
+  },
+  "_comment": "商业智能报告服务的完整AISI描述示例。展示了如何描述一个复杂的数据分析服务，包括多种计费方案、能力矩阵、AI功能和质量指标。这个示例可以作为SaaS服务AISI描述的参考模板。"
+}
