@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AISI Protocol - Tools & Demos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 3rem;
+        }
+        
+        .logo {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto 1.5rem;
+        }
+        
+        .version {
+            background: var(--accent);
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            display: inline-block;
+            font-weight: bold;
+        }
+        
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .tool-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+        }
+        
+        .tool-icon {
+            font-size: 3rem;
+            color: var(--secondary);
+            margin-bottom: 1.5rem;
+        }
+        
+        .tool-card h2 {
+            color: var(--dark);
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+        
+        .tool-card p {
+            color: #666;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: var(--secondary);
+            color: white;
+            padding: 0.8rem 1.8rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: 2px solid var(--secondary);
+        }
+        
+        .btn:hover {
+            background: white;
+            color: var(--secondary);
+        }
+        
+        .btn-secondary {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+        
+        .btn-secondary:hover {
+            background: white;
+            color: var(--primary);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+            border-top: 1px solid #ddd;
+            color: #666;
+        }
+        
+        .footer-links {
+            margin-top: 1rem;
+        }
+        
+        .footer-links a {
+            color: var(--secondary);
+            text-decoration: none;
+            margin: 0 0.5rem;
+        }
+        
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-bolt"></i>
+            </div>
+            <h1>AISI Protocol</h1>
+            <p class="tagline">Atomic Intelligent Service Interface Protocol - Connecting AI Agents with Services</p>
+            <div class="version">v1.0 (2026-01)</div>
+        </div>
+    </header>
+    
+    <main class="container">
+        <div class="tools-grid">
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-wrench"></i>
+                </div>
+                <h2>Service Generator</h2>
+                <p>Visual tool to create AISI service descriptions. No JSON knowledge required - generate compliant service definitions through an intuitive interface.</p>
+                <a href="service-generator.html" class="btn">
+                    <i class="fas fa-external-link-alt"></i> Open Generator
+                </a>
+            </div>
+            
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-play-circle"></i>
+                </div>
+                <h2>Interactive Demo</h2>
+                <p>See the complete service discovery flow in action. Understand how AI agents discover and interact with AISI-compliant services.</p>
+                <a href="demo/index.html" class="btn">
+                    <i class="fas fa-external-link-alt"></i> View Demo
+                </a>
+            </div>
+            
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-code"></i>
+                </div>
+                <h2>API Documentation</h2>
+                <p>Explore the complete protocol specification, API references, and implementation guides. Everything you need to build AISI-compliant services.</p>
+                <a href="https://github.com/aisi-protocol/aisi-protocol/blob/main/SPECIFICATION.md" class="btn btn-secondary" target="_blank">
+                    <i class="fas fa-book"></i> Read Docs
+                </a>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 3rem;">
+            <a href="https://github.com/aisi-protocol/aisi-protocol" class="btn btn-secondary" style="margin-right: 1rem;" target="_blank">
+                <i class="fab fa-github"></i> View on GitHub
+            </a>
+            <a href="https://github.com/aisi-protocol/aisi-protocol/archive/refs/heads/main.zip" class="btn">
+                <i class="fas fa-download"></i> Download Source
+            </a>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>© 2026 AISI Protocol. All rights reserved.</p>
+            <p>Apache License 2.0</p>
+            <div class="footer-links">
+                <a href="https://github.com/aisi-protocol/aisi-protocol/issues">Report Issue</a>
+                <a href="https://github.com/aisi-protocol/aisi-protocol/discussions">Discussions</a>
+                <a href="https://github.com/aisi-protocol/aisi-protocol/blob/main/CONTRIBUTING.md">Contribute</a>
+                <a href="https://github.com/aisi-protocol/aisi-protocol/blob/main/CODE_OF_CONDUCT.md">Code of Conduct</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
